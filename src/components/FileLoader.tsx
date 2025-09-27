@@ -1,30 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseFile } from '../utils/parseFile';
+import { loadSimonPatterns, toLegacyAttackPattern, type BossPhase, type AttackPattern, type SimonPatterns } from '../utils/patternLoader';
 import type { Event } from '../types';
-
-type BossPhase = 'phase1' | 'phase2';
-
-interface AttackPattern {
-  name: string;
-  timings: string;
-  videoPath: string;
-}
-
-const SIMON_PATTERNS: Record<BossPhase, AttackPattern[]> = {
-  phase1: [
-    { name: 'Short Combo', timings: '1.01\n2.33\n3.76\n5.66', videoPath: '/videos/simon/phase1/short-combo.mp4' },
-    { name: 'Powerful Combo', timings: '0.67\n1.9\n2.86', videoPath: '/videos/simon/phase1/powerful-combo.mp4' },
-    { name: 'Punch Combo', timings: '2.566\n4.233\n5.451\n7.586\n9.252', videoPath: '/videos/simon/phase1/punch-combo.mp4' },
-    { name: 'Long Combo', timings: '2.23\n3.37\n4.4\n5.22\n6.21\n7.33', videoPath: '/videos/simon/phase1/long-combo.mp4' },
-  ],
-  phase2: [
-    { name: 'Lightspeed Combo', timings: '1.01\n1.51\n2.01\n2.51', videoPath: '/videos/simon/phase2/lightspeed-combo.mp4' },
-    { name: 'Sword of Lumiere', timings: '1.01\n2.02\n3.03\n4.04\n6.06', videoPath: '/videos/simon/phase2/sword-of-lumiere.mp4' },
-    { name: 'Short Combo (phase 2)', timings: '1.01\n1.81', videoPath: '/videos/simon/phase2/short-combo.mp4' },
-    { name: 'Long Combo (phase 2)', timings: '1.01\n1.81\n2.61\n3.41\n4.21', videoPath: '/videos/simon/phase2/long-combo.mp4' },
-    { name: 'Powerful Combo (phase 2)', timings: '1.01\n2.52\n4.03\n5.54', videoPath: '/videos/simon/phase2/powerful-combo.mp4' },
-  ],
-};
 
 interface TimingInputProps {
   onEventsLoaded: (events: Event[]) => void;
@@ -36,6 +13,18 @@ export function TimingInput({ onEventsLoaded, onErrorChange, onVideoChange }: Ti
   const [currentPhase, setCurrentPhase] = useState<BossPhase>('phase1');
   const [timingText, setTimingText] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [patterns, setPatterns] = useState<SimonPatterns | null>(null);
+
+  // Load patterns on component mount
+  useEffect(() => {
+    try {
+      const loadedPatterns = loadSimonPatterns();
+      setPatterns(loadedPatterns);
+    } catch (error) {
+      console.error('Failed to load patterns:', error);
+      setError('Failed to load attack patterns');
+    }
+  }, []);
 
   const handlePhaseChange = (phase: BossPhase) => {
     setCurrentPhase(phase);
@@ -43,11 +32,12 @@ export function TimingInput({ onEventsLoaded, onErrorChange, onVideoChange }: Ti
   };
 
   const loadPattern = (pattern: AttackPattern) => {
-    setTimingText(pattern.timings);
+    const legacyPattern = toLegacyAttackPattern(pattern);
+    setTimingText(legacyPattern.timings);
     onVideoChange(pattern.videoPath); // Notify parent of video change
     setError(null); // Clear any errors when loading a pattern
     onErrorChange(null); // Notify parent that error is cleared
-    parseAndLoadEvents(pattern.timings);
+    parseAndLoadEvents(legacyPattern.timings);
   };
 
   const parseAndLoadEvents = (text: string) => {
@@ -116,15 +106,19 @@ export function TimingInput({ onEventsLoaded, onErrorChange, onVideoChange }: Ti
           {currentPhase === 'phase1' ? 'Phase 1 Patterns' : 'Phase 2 Patterns'}
         </h3>
         <div className="grid grid-cols-2 gap-2">
-          {SIMON_PATTERNS[currentPhase].map((pattern) => (
+          {patterns ? patterns[currentPhase].map((pattern) => (
             <button
-              key={pattern.name}
+              key={pattern.id}
               onClick={() => loadPattern(pattern)}
               className="px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 rounded text-sm font-medium transition-colors"
             >
               {pattern.name}
             </button>
-          ))}
+          )) : (
+            <div className="col-span-2 text-center text-gray-500 py-4">
+              Loading patterns...
+            </div>
+          )}
         </div>
       </div>
 

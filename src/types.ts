@@ -20,3 +20,6 @@ export type PlaybackState = {
   isPlaying: boolean;
   now: number;
 }
+
+// Re-export pattern types for convenience
+export type { BossPhase, AttackPattern, SimonPatterns } from './utils/patternLoader';

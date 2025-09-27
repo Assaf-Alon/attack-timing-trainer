@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TabNavigation } from './components/TabNavigation';
 import { SimonSimulator } from './components/SimonSimulator';
+import { PatternEditor } from './components/PatternEditor';
 
 function App() {
   const [activeTab, setActiveTab] = useState('simon-simulator');
@@ -8,8 +9,13 @@ function App() {
   const tabs = [
     {
       id: 'simon-simulator',
-      label: 'Simon Simulator',
+      label: '🎮 Training Mode',
       content: <SimonSimulator />
+    },
+    {
+      id: 'pattern-editor',
+      label: '⚙️ Pattern Editor',
+      content: <PatternEditor />
     }
   ];
 

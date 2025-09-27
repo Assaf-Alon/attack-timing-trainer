@@ -7,40 +7,44 @@ type BossPhase = 'phase1' | 'phase2';
 interface AttackPattern {
   name: string;
   timings: string;
+  videoPath: string;
 }
 
 const SIMON_PATTERNS: Record<BossPhase, AttackPattern[]> = {
   phase1: [
-    { name: 'Short Combo', timings: '1.01\n2.33\n3.76\n5.66' },
-    { name: 'Powerful Combo', timings: '0.67\n1.9\n2.86' },
-    { name: 'Punch Combo', timings: '1.51\n3.16\n4.31\n6.66\n8.16' },
-    { name: 'Long Combo', timings: '2.23\n3.37\n4.4\n5.22\n6.21\n7.33' },
+    { name: 'Short Combo', timings: '1.01\n2.33\n3.76\n5.66', videoPath: '/videos/simon/phase1/short-combo.mp4' },
+    { name: 'Powerful Combo', timings: '0.67\n1.9\n2.86', videoPath: '/videos/simon/phase1/powerful-combo.mp4' },
+    { name: 'Punch Combo', timings: '2.566\n4.233\n5.451\n7.586\n9.252', videoPath: '/videos/simon/phase1/punch-combo.mp4' },
+    { name: 'Long Combo', timings: '2.23\n3.37\n4.4\n5.22\n6.21\n7.33', videoPath: '/videos/simon/phase1/long-combo.mp4' },
   ],
   phase2: [
-    { name: 'Lightspeed Combo', timings: '1.01\n1.51\n2.01\n2.51' },
-    { name: 'Sword of Lumiere', timings: '1.01\n2.02\n3.03\n4.04\n6.06' },
-    { name: 'Short Combo (phase 2)', timings: '1.01\n1.81' },
-    { name: 'Long Combo (phase 2)', timings: '1.01\n1.81\n2.61\n3.41\n4.21' },
-    { name: 'Powerful Combo (phase 2)', timings: '1.01\n2.52\n4.03\n5.54' },
+    { name: 'Lightspeed Combo', timings: '1.01\n1.51\n2.01\n2.51', videoPath: '/videos/simon/phase2/lightspeed-combo.mp4' },
+    { name: 'Sword of Lumiere', timings: '1.01\n2.02\n3.03\n4.04\n6.06', videoPath: '/videos/simon/phase2/sword-of-lumiere.mp4' },
+    { name: 'Short Combo (phase 2)', timings: '1.01\n1.81', videoPath: '/videos/simon/phase2/short-combo.mp4' },
+    { name: 'Long Combo (phase 2)', timings: '1.01\n1.81\n2.61\n3.41\n4.21', videoPath: '/videos/simon/phase2/long-combo.mp4' },
+    { name: 'Powerful Combo (phase 2)', timings: '1.01\n2.52\n4.03\n5.54', videoPath: '/videos/simon/phase2/powerful-combo.mp4' },
   ],
 };
 
 interface TimingInputProps {
   onEventsLoaded: (events: Event[]) => void;
   onErrorChange: (error: string | null) => void;
+  onVideoChange: (videoPath: string | null) => void;
 }
 
-export function TimingInput({ onEventsLoaded, onErrorChange }: TimingInputProps) {
+export function TimingInput({ onEventsLoaded, onErrorChange, onVideoChange }: TimingInputProps) {
   const [currentPhase, setCurrentPhase] = useState<BossPhase>('phase1');
   const [timingText, setTimingText] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const handlePhaseChange = (phase: BossPhase) => {
     setCurrentPhase(phase);
+    onVideoChange(null); // Notify parent that video is cleared
   };
 
   const loadPattern = (pattern: AttackPattern) => {
     setTimingText(pattern.timings);
+    onVideoChange(pattern.videoPath); // Notify parent of video change
     setError(null); // Clear any errors when loading a pattern
     onErrorChange(null); // Notify parent that error is cleared
     parseAndLoadEvents(pattern.timings);
@@ -69,6 +73,7 @@ export function TimingInput({ onEventsLoaded, onErrorChange }: TimingInputProps)
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = event.target.value;
     setTimingText(text);
+    onVideoChange(null); // Notify parent that video is cleared
     parseAndLoadEvents(text);
   };
 

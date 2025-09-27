@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { TimingInput } from './FileLoader';
 import { Controls } from './Controls';
 import { Timeline } from './Timeline';
@@ -10,12 +10,14 @@ export function SimonSimulator() {
   const [events, setEvents] = useState<Event[]>([]);
   const [presses, setPresses] = useState<Press[]>([]);
   const [inputError, setInputError] = useState<string | null>(null);
+  const [currentVideoPath, setCurrentVideoPath] = useState<string | null>(null);
   const [options, setOptions] = useState<PlaybackOptions>({
     speed: 1.0,
     toleranceMs: 100,
     preRollSeconds: 1.0,
   });
 
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { start, stop, reset, now, isPlaying } = usePlayback(events, options);
 
   // Calculate timeline duration (add 2 seconds after the last event for auto-stop)
@@ -68,6 +70,49 @@ export function SimonSimulator() {
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
+  // Synchronize video with playback
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !currentVideoPath) return;
+
+    if (isPlaying && now >= 0) {
+      // Timeline has started (after pre-roll delay)
+      const videoTime = now / options.speed;
+      
+      // Only sync if there's a significant difference (avoid constant adjustments)
+      const timeDiff = Math.abs(video.currentTime - videoTime);
+      if (timeDiff > 0.1) {
+        video.currentTime = videoTime;
+      }
+      
+      // Start video playback
+      if (video.paused) {
+        video.playbackRate = options.speed;
+        video.play().catch(console.error);
+      }
+    } else if (isPlaying && now < 0) {
+      // Pre-roll period - keep video paused at start
+      video.currentTime = 0;
+      if (!video.paused) {
+        video.pause();
+      }
+    } else if (!isPlaying) {
+      // Playback stopped - pause video
+      if (!video.paused) {
+        video.pause();
+      }
+    }
+  }, [isPlaying, now, currentVideoPath, options.speed]);
+
+  // Reset video when playback resets
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && !isPlaying && now === 0) {
+      video.currentTime = 0;
+      video.playbackRate = 1.0;
+    }
+  }, [isPlaying, now]);
+
   // Reset presses when starting new playback
   const handlePlay = () => {
     setPresses([]);
@@ -86,6 +131,7 @@ export function SimonSimulator() {
         <TimingInput 
           onEventsLoaded={setEvents} 
           onErrorChange={setInputError}
+          onVideoChange={setCurrentVideoPath}
         />
         
         {/* Controls */}
@@ -98,6 +144,48 @@ export function SimonSimulator() {
           onReset={handleReset}
           onOptionsChange={setOptions}
         />
+        
+        {/* Video Display */}
+        {currentVideoPath && (
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-lg font-semibold mb-4">Attack Pattern Video</h2>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <div className="flex justify-center">
+                <video
+                  ref={videoRef}
+                  key={currentVideoPath}
+                  src={currentVideoPath}
+                  preload="metadata"
+                  className="rounded-lg shadow-md max-w-full h-auto"
+                  style={{ maxHeight: '400px', maxWidth: '100%' }}
+                  onError={() => console.error('Error loading video:', currentVideoPath)}
+                  onLoadedMetadata={() => {
+                    // Ensure video starts at the beginning when loaded
+                    if (videoRef.current) {
+                      videoRef.current.currentTime = 0;
+                    }
+                  }}
+                  onEnded={() => {
+                    // Loop video if timeline is still running
+                    if (isPlaying && now >= 0 && videoRef.current) {
+                      videoRef.current.currentTime = 0;
+                      videoRef.current.play().catch(console.error);
+                    }
+                  }}
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <p className="text-sm text-gray-600 text-center mt-3">
+                📹 {isPlaying 
+                  ? (now < 0 
+                    ? `Video will start in ${Math.abs(now).toFixed(1)}s` 
+                    : 'Video synced with timeline')
+                  : 'Video will sync with timeline when you press Play'}
+              </p>
+            </div>
+          </div>
+        )}
         
         {/* Timeline */}
         {events.length > 0 && (

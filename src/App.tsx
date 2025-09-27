@@ -17,7 +17,7 @@ function App() {
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          Simon Simulator
+          Boss Attack Timing Trainer
         </h1>
         
         <TabNavigation 

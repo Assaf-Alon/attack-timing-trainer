@@ -1,6 +1,6 @@
-# Simon Simulator
+# Boss Attack Timing Trainer
 
-A React + TypeScript web application for practicing precise keypress timings using the Simon Simulator interface.
+A React + TypeScript web application for practicing precise keypress timings based on boss attack patterns.
 
 ## Features
 

@@ -9,6 +9,7 @@ import type { Event, Press, PlaybackOptions } from '../types';
 export function SimonSimulator() {
   const [events, setEvents] = useState<Event[]>([]);
   const [presses, setPresses] = useState<Press[]>([]);
+  const [inputError, setInputError] = useState<string | null>(null);
   const [options, setOptions] = useState<PlaybackOptions>({
     speed: 1.0,
     toleranceMs: 100,
@@ -82,12 +83,16 @@ export function SimonSimulator() {
     <div>
       <div className="grid gap-6">
         {/* Timing Input */}
-        <TimingInput onEventsLoaded={setEvents} />
+        <TimingInput 
+          onEventsLoaded={setEvents} 
+          onErrorChange={setInputError}
+        />
         
         {/* Controls */}
         <Controls
           isPlaying={isPlaying}
           options={options}
+          hasError={inputError !== null}
           onPlay={handlePlay}
           onStop={stop}
           onReset={handleReset}

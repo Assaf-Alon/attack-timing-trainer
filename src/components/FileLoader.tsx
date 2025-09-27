@@ -27,11 +27,13 @@ const SIMON_PATTERNS: Record<BossPhase, AttackPattern[]> = {
 
 interface TimingInputProps {
   onEventsLoaded: (events: Event[]) => void;
+  onErrorChange: (error: string | null) => void;
 }
 
-export function TimingInput({ onEventsLoaded }: TimingInputProps) {
+export function TimingInput({ onEventsLoaded, onErrorChange }: TimingInputProps) {
   const [currentPhase, setCurrentPhase] = useState<BossPhase>('phase1');
   const [timingText, setTimingText] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const handlePhaseChange = (phase: BossPhase) => {
     setCurrentPhase(phase);
@@ -39,6 +41,8 @@ export function TimingInput({ onEventsLoaded }: TimingInputProps) {
 
   const loadPattern = (pattern: AttackPattern) => {
     setTimingText(pattern.timings);
+    setError(null); // Clear any errors when loading a pattern
+    onErrorChange(null); // Notify parent that error is cleared
     parseAndLoadEvents(pattern.timings);
   };
 
@@ -50,21 +54,22 @@ export function TimingInput({ onEventsLoaded }: TimingInputProps) {
         time,
       }));
       
+      setError(null); // Clear any previous errors
+      onErrorChange(null); // Notify parent that error is cleared
       onEventsLoaded(events);
     } catch (error) {
       console.error('Error parsing timings:', error);
-      alert('Error parsing timings. Please check the format.');
+      const errorMessage = error instanceof Error ? error.message : 'Error parsing timings. Please check the format.';
+      setError(errorMessage);
+      onErrorChange(errorMessage); // Notify parent of the error
+      onEventsLoaded([]); // Clear events when there's an error
     }
   };
 
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = event.target.value;
     setTimingText(text);
-    if (text.trim()) {
-      parseAndLoadEvents(text);
-    } else {
-      onEventsLoaded([]);
-    }
+    parseAndLoadEvents(text);
   };
 
   return (
@@ -127,8 +132,27 @@ export function TimingInput({ onEventsLoaded }: TimingInputProps) {
           value={timingText}
           onChange={handleTextChange}
           placeholder="Enter simon timings in seconds, one per line:&#10;1.01&#10;2.02&#10;3.03"
-          className="w-full h-32 p-3 border border-gray-300 rounded-md text-sm font-mono resize-vertical"
+          className={`w-full h-32 p-3 border rounded-md text-sm font-mono resize-vertical ${
+            error ? 'border-red-300 bg-red-50' : 'border-gray-300'
+          }`}
         />
+        {error && (
+          <div className="mt-2 p-3 bg-red-100 border border-red-300 rounded-md">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">Invalid Input</h3>
+                <div className="mt-1 text-sm text-red-700 whitespace-pre-line">
+                  {error}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <p className="text-sm text-gray-600">

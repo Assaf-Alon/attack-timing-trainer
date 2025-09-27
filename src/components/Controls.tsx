@@ -3,6 +3,7 @@ import type { PlaybackOptions } from '../types';
 interface ControlsProps {
   isPlaying: boolean;
   options: PlaybackOptions;
+  hasError: boolean;
   onPlay: () => void;
   onStop: () => void;
   onReset: () => void;
@@ -12,6 +13,7 @@ interface ControlsProps {
 export function Controls({
   isPlaying,
   options,
+  hasError,
   onPlay,
   onStop,
   onReset,
@@ -25,9 +27,13 @@ export function Controls({
       <div className="flex gap-3 mb-6">
         <button
           onClick={isPlaying ? onStop : onPlay}
+          disabled={!isPlaying && hasError}
+          title={hasError && !isPlaying ? 'Please fix the timing input errors before playing' : ''}
           className={`px-4 py-2 rounded font-medium ${
             isPlaying
               ? 'bg-red-500 hover:bg-red-600 text-white'
+              : hasError
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
               : 'bg-green-500 hover:bg-green-600 text-white'
           }`}
         >

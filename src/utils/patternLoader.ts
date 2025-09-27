@@ -16,7 +16,6 @@ export interface SimonPatterns {
 
 // Local storage key for pattern overrides
 const PATTERNS_STORAGE_KEY = 'simon-patterns-custom';
-const PATTERNS_BACKUP_KEY = 'simon-patterns-backup';
 
 /**
  * Load Simon patterns with local storage overrides
@@ -45,10 +44,6 @@ export function loadSimonPatterns(): SimonPatterns {
  */
 export function saveSimonPatterns(patterns: SimonPatterns): void {
   try {
-    // Create backup of current patterns before saving
-    const currentPatterns = loadSimonPatterns();
-    localStorage.setItem(PATTERNS_BACKUP_KEY, JSON.stringify(currentPatterns));
-    
     // Save new patterns
     localStorage.setItem(PATTERNS_STORAGE_KEY, JSON.stringify(patterns));
     
@@ -77,25 +72,7 @@ export function resetPatternsToDefault(): SimonPatterns {
   }
 }
 
-/**
- * Restore patterns from backup
- */
-export function restorePatternsFromBackup(): SimonPatterns | null {
-  try {
-    const backup = localStorage.getItem(PATTERNS_BACKUP_KEY);
-    if (backup) {
-      const parsed = JSON.parse(backup);
-      if (validatePatternsStructure(parsed)) {
-        localStorage.setItem(PATTERNS_STORAGE_KEY, backup);
-        return parsed;
-      }
-    }
-    return null;
-  } catch (error) {
-    console.warn('Failed to restore patterns from backup:', error);
-    return null;
-  }
-}
+
 
 /**
  * Update a specific pattern
@@ -128,23 +105,7 @@ export function updatePattern(phase: BossPhase, patternId: string, newTimings: n
   return updatedPatterns;
 }
 
-/**
- * Convert pattern timings to string format (for compatibility)
- */
-export function patternToTimingString(pattern: AttackPattern): string {
-  return pattern.timings.join('\n');
-}
 
-/**
- * Convert timings array to legacy AttackPattern format
- */
-export function toLegacyAttackPattern(pattern: AttackPattern) {
-  return {
-    name: pattern.name,
-    timings: patternToTimingString(pattern),
-    videoPath: pattern.videoPath
-  };
-}
 
 /**
  * Validate pattern structure
@@ -192,13 +153,7 @@ function validateTimings(timings: number[]): boolean {
   return true;
 }
 
-/**
- * Export patterns to JSON file (for backup)
- */
-export function exportPatternsToFile(): string {
-  const patterns = loadSimonPatterns();
-  return JSON.stringify(patterns, null, 2);
-}
+
 
 /**
  * Import patterns from JSON string

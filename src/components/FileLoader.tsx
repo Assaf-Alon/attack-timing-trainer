@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { parseFile } from '../utils/parseFile';
-import { loadSimonPatterns, toLegacyAttackPattern, type BossPhase, type AttackPattern, type SimonPatterns } from '../utils/patternLoader';
+import { loadSimonPatterns, type BossPhase, type AttackPattern, type SimonPatterns } from '../utils/patternLoader';
 import type { Event } from '../types';
 
 interface TimingInputProps {
@@ -44,12 +44,12 @@ export function TimingInput({ onEventsLoaded, onErrorChange, onVideoChange }: Ti
   };
 
   const loadPattern = (pattern: AttackPattern) => {
-    const legacyPattern = toLegacyAttackPattern(pattern);
-    setTimingText(legacyPattern.timings);
+    const timingText = pattern.timings.join('\n');
+    setTimingText(timingText);
     onVideoChange(pattern.videoPath); // Notify parent of video change
     setError(null); // Clear any errors when loading a pattern
     onErrorChange(null); // Notify parent that error is cleared
-    parseAndLoadEvents(legacyPattern.timings);
+    parseAndLoadEvents(timingText);
   };
 
   const parseAndLoadEvents = (text: string) => {

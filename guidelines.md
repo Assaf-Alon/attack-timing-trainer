@@ -38,11 +38,11 @@ src/
 * Root component.
 * Holds global state:
 
-  * `events: Event[]` (parsed from file)
+  * `events: Event[]` (parsed from patterns or manual input)
   * `results: Press[]` (keypress results for the current run)
 * Renders:
 
-  * `<FileLoader />` for loading a `.txt` file of event times
+  * `<TimingInput />` for pattern selection and manual timing input
   * `<Controls />` to start/stop/reset playback
   * `<Timeline />` to visualize event markers and live playhead
   * `<Feedback />` to show per-event accuracy stats
@@ -55,9 +55,9 @@ src/
 
 ### `src/components/FileLoader.tsx`
 
-* UI: “Choose file” input.
-* Reads file contents as text, calls `parseFile()` to parse into array of floats.
-* Passes parsed `Event[]` up via a prop callback.
+* UI: Pattern selector with phase tabs and preset buttons, plus manual timing text input.
+* Loads predefined simon patterns or parses manual text input into array of floats.
+* Passes parsed `Event[]` up via a prop callback.t web app for practicing precise keypress timings based on a list of event timestamps.
 
 ---
 
@@ -140,7 +140,7 @@ src/
 
 ## App Behavior
 
-1. **File input**: user loads `.txt` file, parsed into `events`.
+1. **Pattern input**: user selects predefined pattern or enters manual timings, parsed into `events`.
    Example file contents:
 
    ```
@@ -202,4 +202,4 @@ src/
 * Timeline and Feedback must update in real-time via `requestAnimationFrame`.
 * Focus first on *minimal viable version*:
 
-  * Load file → Play → Spacebar presses → Show deltas.
+  * Select pattern → Play → Spacebar presses → Show deltas.

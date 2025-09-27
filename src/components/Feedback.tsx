@@ -109,7 +109,7 @@ export function Feedback({ presses, events }: FeedbackProps) {
 
       {events.length === 0 && (
         <p className="text-gray-500 text-center py-8">
-          Load an event file to see results here.
+          Select a pattern or enter timings to see results here.
         </p>
       )}
     </div>

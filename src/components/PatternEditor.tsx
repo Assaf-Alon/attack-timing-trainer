@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { loadSimonPatterns, updatePattern, resetPatternsToDefault, exportPatternsToFile, type BossPhase, type AttackPattern, type SimonPatterns } from '../utils/patternLoader';
+import { loadSimonPatterns, updatePattern, resetPatternsToDefault, type BossPhase, type AttackPattern, type SimonPatterns } from '../utils/patternLoader';
 
 type EditMode = 'view' | 'calibrate' | 'adjust';
 
@@ -80,25 +80,6 @@ export function PatternEditor() {
     }
   };
 
-  const handleExportPatterns = () => {
-    try {
-      const jsonString = exportPatternsToFile();
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'simon-patterns-backup.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'Failed to export patterns'
-      }));
-    }
-  };
 
   const handleExportForJSON = () => {
     try {
@@ -188,16 +169,10 @@ export function PatternEditor() {
               🔄 Refresh
             </button>
             <button
-              onClick={handleExportPatterns}
+              onClick={handleExportForJSON}
               className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-colors text-sm"
             >
-              📥 Export Backup
-            </button>
-            <button
-              onClick={handleExportForJSON}
-              className="px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded font-medium transition-colors text-sm"
-            >
-              📋 Export as JSON
+              � Export as JSON
             </button>
             <button
               onClick={handleResetToDefaults}

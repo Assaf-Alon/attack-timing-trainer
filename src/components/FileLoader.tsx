@@ -15,15 +15,27 @@ export function TimingInput({ onEventsLoaded, onErrorChange, onVideoChange }: Ti
   const [error, setError] = useState<string | null>(null);
   const [patterns, setPatterns] = useState<SimonPatterns | null>(null);
 
-  // Load patterns on component mount
+  // Load patterns on component mount and set up refresh listener
   useEffect(() => {
-    try {
-      const loadedPatterns = loadSimonPatterns();
-      setPatterns(loadedPatterns);
-    } catch (error) {
-      console.error('Failed to load patterns:', error);
-      setError('Failed to load attack patterns');
-    }
+    const loadPatternsData = () => {
+      try {
+        const loadedPatterns = loadSimonPatterns();
+        setPatterns(loadedPatterns);
+      } catch (error) {
+        console.error('Failed to load patterns:', error);
+        setError('Failed to load attack patterns');
+      }
+    };
+
+    loadPatternsData();
+
+    // Listen for pattern updates (custom event)
+    const handlePatternUpdate = () => {
+      loadPatternsData();
+    };
+
+    window.addEventListener('patternUpdated', handlePatternUpdate);
+    return () => window.removeEventListener('patternUpdated', handlePatternUpdate);
   }, []);
 
   const handlePhaseChange = (phase: BossPhase) => {

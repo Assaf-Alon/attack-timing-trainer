@@ -3,25 +3,47 @@
     {
       "id": "short-combo",
       "name": "Short Combo",
-      "timings": [1.01, 2.33, 3.76, 5.66],
+      "timings": [
+        1.560229,
+        2.888187,
+        4.404,
+        6.3585
+      ],
       "videoPath": "/videos/simon/phase1/short-combo.mp4"
     },
     {
       "id": "powerful-combo",
-      "name": "Powerful Combo", 
-      "timings": [0.67, 1.9, 2.86],
+      "name": "Powerful Combo",
+      "timings": [
+        4.26,
+        5.49,
+        6.45
+      ],
       "videoPath": "/videos/simon/phase1/powerful-combo.mp4"
     },
     {
       "id": "punch-combo",
       "name": "Punch Combo",
-      "timings": [2.566, 4.233, 5.451, 7.586, 9.252],
+      "timings": [
+        2.566,
+        4.233,
+        5.451,
+        7.586,
+        9.252
+      ],
       "videoPath": "/videos/simon/phase1/punch-combo.mp4"
     },
     {
       "id": "long-combo",
       "name": "Long Combo",
-      "timings": [2.23, 3.37, 4.4, 5.22, 6.21, 7.33],
+      "timings": [
+        3.52,
+        4.669,
+        5.66,
+        6.519,
+        7.509,
+        8.629
+      ],
       "videoPath": "/videos/simon/phase1/long-combo.mp4"
     }
   ],
@@ -29,31 +51,56 @@
     {
       "id": "lightspeed-combo",
       "name": "Lightspeed Combo",
-      "timings": [1.01, 1.51, 2.01, 2.51],
+      "timings": [
+        1.01,
+        1.51,
+        2.01,
+        2.51
+      ],
       "videoPath": "/videos/simon/phase2/lightspeed-combo.mp4"
     },
     {
       "id": "sword-of-lumiere",
       "name": "Sword of Lumiere",
-      "timings": [1.01, 2.02, 3.03, 4.04, 6.06],
+      "timings": [
+        1.01,
+        2.02,
+        3.03,
+        4.04,
+        6.06
+      ],
       "videoPath": "/videos/simon/phase2/sword-of-lumiere.mp4"
     },
     {
       "id": "short-combo-p2",
       "name": "Short Combo (phase 2)",
-      "timings": [1.01, 1.81],
+      "timings": [
+        1.01,
+        1.81
+      ],
       "videoPath": "/videos/simon/phase2/short-combo.mp4"
     },
     {
-      "id": "long-combo-p2", 
+      "id": "long-combo-p2",
       "name": "Long Combo (phase 2)",
-      "timings": [1.01, 1.81, 2.61, 3.41, 4.21],
+      "timings": [
+        1.01,
+        1.81,
+        2.61,
+        3.41,
+        4.21
+      ],
       "videoPath": "/videos/simon/phase2/long-combo.mp4"
     },
     {
       "id": "powerful-combo-p2",
       "name": "Powerful Combo (phase 2)",
-      "timings": [1.01, 2.52, 4.03, 5.54],
+      "timings": [
+        1.01,
+        2.52,
+        4.03,
+        5.54
+      ],
       "videoPath": "/videos/simon/phase2/powerful-combo.mp4"
     }
   ]

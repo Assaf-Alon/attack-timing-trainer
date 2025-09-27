@@ -51,6 +51,9 @@ export function saveSimonPatterns(patterns: SimonPatterns): void {
     
     // Save new patterns
     localStorage.setItem(PATTERNS_STORAGE_KEY, JSON.stringify(patterns));
+    
+    // Dispatch event to notify components of pattern update
+    window.dispatchEvent(new CustomEvent('patternUpdated'));
   } catch (error) {
     console.error('Failed to save patterns to localStorage:', error);
     throw new Error('Failed to save patterns. Storage might be full.');
@@ -63,6 +66,10 @@ export function saveSimonPatterns(patterns: SimonPatterns): void {
 export function resetPatternsToDefault(): SimonPatterns {
   try {
     localStorage.removeItem(PATTERNS_STORAGE_KEY);
+    
+    // Dispatch event to notify components of pattern update
+    window.dispatchEvent(new CustomEvent('patternUpdated'));
+    
     return simonPatternsData as SimonPatterns;
   } catch (error) {
     console.error('Failed to reset patterns:', error);

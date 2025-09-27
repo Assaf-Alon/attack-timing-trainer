@@ -6,7 +6,7 @@ interface FeedbackProps {
   toleranceMs: number;
 }
 
-export function Feedback({ presses, events, toleranceMs }: FeedbackProps) {
+export function Feedback({ presses, events }: FeedbackProps) {
   // Calculate summary stats
   const matchedPresses = presses.filter(p => p.matched);
   const avgError = matchedPresses.length > 0 
@@ -95,7 +95,7 @@ export function Feedback({ presses, events, toleranceMs }: FeedbackProps) {
                   {press ? (
                     <span className="font-medium">
                       {press.delta >= 0 ? '+' : ''}{press.delta.toFixed(1)}ms
-                      {press.matched ? ' ✓' : ` (>${toleranceMs}ms)`}
+                      {press.matched ? ' ✓' : ' ✗'}
                     </span>
                   ) : (
                     <span className="text-gray-500">No press</span>

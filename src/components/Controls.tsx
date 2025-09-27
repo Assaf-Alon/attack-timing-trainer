@@ -76,7 +76,7 @@ export function Controls({
             onChange={(e) =>
               onOptionsChange({
                 ...options,
-                toleranceMs: parseInt(e.target.value) || 50,
+                toleranceMs: parseInt(e.target.value) || 100,
               })
             }
             className="w-full p-2 border border-gray-300 rounded"

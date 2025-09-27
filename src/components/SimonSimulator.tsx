@@ -11,8 +11,8 @@ export function SimonSimulator() {
   const [presses, setPresses] = useState<Press[]>([]);
   const [options, setOptions] = useState<PlaybackOptions>({
     speed: 1.0,
-    toleranceMs: 50,
-    preRollSeconds: 3.0,
+    toleranceMs: 100,
+    preRollSeconds: 1.0,
   });
 
   const { start, stop, reset, now, isPlaying } = usePlayback(events, options);
@@ -27,14 +27,22 @@ export function SimonSimulator() {
       
       const pressTime = now;
       let bestMatch: { event: Event; delta: number } | null = null;
+      let nearestEvent: { event: Event; delta: number } | null = null;
       
-      // Find the closest unmatched event within tolerance
+      // Find the closest unmatched event within tolerance, and also track the nearest event overall
       for (const eventItem of events) {
         if (presses.some(p => p.eventId === eventItem.id && p.matched)) {
           continue; // Skip already matched events
         }
         
         const delta = (pressTime - eventItem.time) * 1000; // Convert to ms
+        
+        // Track nearest event regardless of tolerance for miss feedback
+        if (!nearestEvent || Math.abs(delta) < Math.abs(nearestEvent.delta)) {
+          nearestEvent = { event: eventItem, delta };
+        }
+        
+        // Check if within tolerance for matching
         if (Math.abs(delta) <= options.toleranceMs) {
           if (!bestMatch || Math.abs(delta) < Math.abs(bestMatch.delta)) {
             bestMatch = { event: eventItem, delta };
@@ -43,9 +51,9 @@ export function SimonSimulator() {
       }
 
       const newPress: Press = {
-        eventId: bestMatch?.event.id ?? null,
+        eventId: bestMatch?.event.id ?? nearestEvent?.event.id ?? null,
         time: pressTime,
-        delta: bestMatch?.delta ?? 0,
+        delta: bestMatch?.delta ?? nearestEvent?.delta ?? 0,
         matched: bestMatch !== null,
       };
 

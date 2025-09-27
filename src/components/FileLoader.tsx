@@ -9,12 +9,12 @@ interface AttackPattern {
   timings: string;
 }
 
-const ATTACK_PATTERNS: Record<BossPhase, AttackPattern[]> = {
+const SIMON_PATTERNS: Record<BossPhase, AttackPattern[]> = {
   phase1: [
-    { name: 'Melee Combo', timings: '1.01\n2.02\n3.03' },
-    { name: 'Short Combo (phase 1)', timings: '1.01\n2.02' },
-    { name: 'Long Combo (phase 1)', timings: '1.01\n2.02\n3.03\n4.04\n5.05' },
-    { name: 'Powerful Combo (phase 1)', timings: '1.01\n3.03\n5.05\n7.07' },
+    { name: 'Short Combo', timings: '1.01\n2.33\n3.76\n5.66' },
+    { name: 'Powerful Combo', timings: '0.67\n1.9\n2.86' },
+    { name: 'Punch Combo', timings: '1.51\n3.16\n4.31\n6.66\n8.16' },
+    { name: 'Long Combo', timings: '2.23\n3.37\n4.4\n5.22\n6.21\n7.33' },
   ],
   phase2: [
     { name: 'Lightspeed Combo', timings: '1.01\n1.51\n2.01\n2.51' },
@@ -69,11 +69,11 @@ export function TimingInput({ onEventsLoaded }: TimingInputProps) {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-lg font-semibold mb-4">Attack Timing Configuration</h2>
+      <h2 className="text-lg font-semibold mb-4">Simon Timing Configuration</h2>
       
       {/* Phase Selection */}
       <div className="mb-4">
-        <h3 className="text-md font-medium mb-2">Boss Phase</h3>
+        <h3 className="text-md font-medium mb-2">Simon Phase</h3>
         <div className="flex gap-4">
           <label className="flex items-center">
             <input
@@ -100,13 +100,13 @@ export function TimingInput({ onEventsLoaded }: TimingInputProps) {
         </div>
       </div>
 
-      {/* Attack Pattern Buttons */}
+      {/* Simon Pattern Buttons */}
       <div className="mb-4">
         <h3 className="text-md font-medium mb-2">
-          {currentPhase === 'phase1' ? 'Phase 1 Attacks' : 'Phase 2 Attacks'}
+          {currentPhase === 'phase1' ? 'Phase 1 Patterns' : 'Phase 2 Patterns'}
         </h3>
         <div className="grid grid-cols-2 gap-2">
-          {ATTACK_PATTERNS[currentPhase].map((pattern) => (
+          {SIMON_PATTERNS[currentPhase].map((pattern) => (
             <button
               key={pattern.name}
               onClick={() => loadPattern(pattern)}
@@ -121,18 +121,18 @@ export function TimingInput({ onEventsLoaded }: TimingInputProps) {
       {/* Timing Text Area */}
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Attack Timings (seconds, one per line)
+          Simon Timings (seconds, one per line)
         </label>
         <textarea
           value={timingText}
           onChange={handleTextChange}
-          placeholder="Enter attack timings in seconds, one per line:&#10;1.01&#10;2.02&#10;3.03"
+          placeholder="Enter simon timings in seconds, one per line:&#10;1.01&#10;2.02&#10;3.03"
           className="w-full h-32 p-3 border border-gray-300 rounded-md text-sm font-mono resize-vertical"
         />
       </div>
 
       <p className="text-sm text-gray-600">
-        Select an attack pattern above or manually enter timing values. Comments starting with # are ignored.
+        Select a simon pattern above or manually enter timing values. Comments starting with # are ignored.
       </p>
     </div>
   );

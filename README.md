@@ -1,10 +1,10 @@
-# Boss Attack Timing Trainer
+# Simon Simulator
 
-A React + TypeScript web application for practicing precise keypress timings based on boss attack patterns.
+A React + TypeScript web application for practicing precise keypress timings using the Simon Simulator interface.
 
 ## Features
 
-- **Boss Attack Patterns**: Predefined attack patterns for Phase 1 and Phase 2 with quick-load buttons
+- **Simon Patterns**: Predefined simon patterns for Phase 1 and Phase 2 with quick-load buttons
 - **Manual Timing Input**: Text area for custom timing configurations
 - **Precise Timing**: Uses Web Audio API for low-latency click sounds and `performance.now()` for accurate timing
 - **Real-time Feedback**: Visual timeline showing your keypresses vs expected events
@@ -41,9 +41,9 @@ A React + TypeScript web application for practicing precise keypress timings bas
 
 ## Usage
 
-1. **Select Attack Pattern**: 
+1. **Select Simon Pattern**: 
    - Choose between Phase 1 and Phase 2 using radio buttons
-   - Click on predefined attack patterns to load their timings
+   - Click on predefined simon patterns to load their timings
    - Or manually enter custom timings in the text area
    - Format: One timestamp per line (in seconds)
    - Comments starting with `#` are ignored
@@ -63,17 +63,17 @@ A React + TypeScript web application for practicing precise keypress timings bas
    - Check your accuracy in the Results panel
    - Export detailed CSV for analysis
 
-## Attack Patterns
+## Simon Patterns
 
-The application includes predefined attack patterns for two boss phases:
+The application includes predefined simon patterns for two phases:
 
-**Phase 1 Attacks:**
+**Phase 1 Patterns:**
 - Melee Combo
 - Short Combo (phase 1) 
 - Long Combo (phase 1)
 - Powerful Combo (phase 1)
 
-**Phase 2 Attacks:**
+**Phase 2 Patterns:**
 - Lightspeed Combo
 - Sword of Lumiere
 - Short Combo (phase 2)

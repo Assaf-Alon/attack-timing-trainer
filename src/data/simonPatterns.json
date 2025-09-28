@@ -9,7 +9,7 @@
         4.404,
         6.3585
       ],
-      "videoPath": "/videos/simon/phase1/short-combo.mp4"
+      "videoPath": "videos/simon/phase1/short-combo.mp4"
     },
     {
       "id": "powerful-combo",
@@ -19,7 +19,7 @@
         5.49,
         6.45
       ],
-      "videoPath": "/videos/simon/phase1/powerful-combo.mp4"
+      "videoPath": "videos/simon/phase1/powerful-combo.mp4"
     },
     {
       "id": "punch-combo",
@@ -31,7 +31,7 @@
         7.586,
         9.252
       ],
-      "videoPath": "/videos/simon/phase1/punch-combo.mp4"
+      "videoPath": "videos/simon/phase1/punch-combo.mp4"
     },
     {
       "id": "long-combo",
@@ -44,7 +44,7 @@
         7.509,
         8.629
       ],
-      "videoPath": "/videos/simon/phase1/long-combo.mp4"
+      "videoPath": "videos/simon/phase1/long-combo.mp4"
     }
   ],
   "phase2": [
@@ -63,7 +63,7 @@
         10.025,
         12.397
       ],
-      "videoPath": "/videos/simon/phase2/lightspeed-combo.mp4"
+      "videoPath": "videos/simon/phase2/lightspeed-combo.mp4"
     },
     {
       "id": "sword-of-lumiere",
@@ -77,7 +77,7 @@
         7,
         8
       ],
-      "videoPath": "/videos/simon/phase2/sword-of-lumiere.mp4"
+      "videoPath": "videos/simon/phase2/sword-of-lumiere.mp4"
     },
     {
       "id": "short-combo-p2",
@@ -91,7 +91,7 @@
         6.224,
         6.687
       ],
-      "videoPath": "/videos/simon/phase2/short-combo.mp4"
+      "videoPath": "videos/simon/phase2/short-combo.mp4"
     },
     {
       "id": "long-combo-p2",
@@ -110,7 +110,7 @@
         9.251,
         9.729
       ],
-      "videoPath": "/videos/simon/phase2/long-combo.mp4"
+      "videoPath": "videos/simon/phase2/long-combo.mp4"
     },
     {
       "id": "powerful-combo-p2",
@@ -123,7 +123,7 @@
         5.55,
         6.66
       ],
-      "videoPath": "/videos/simon/phase2/powerful-combo.mp4"
+      "videoPath": "videos/simon/phase2/powerful-combo.mp4"
     }
   ]
 }

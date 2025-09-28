@@ -5,9 +5,9 @@
       "name": "Short Combo",
       "timings": [
         1.560229,
-        2.888187,
-        4.404,
-        6.3585
+        2.982,
+        4.6,
+        6.394
       ],
       "videoPath": "videos/simon/phase1/short-combo.mp4"
     },
@@ -15,8 +15,8 @@
       "id": "powerful-combo",
       "name": "Powerful Combo",
       "timings": [
-        4.26,
-        5.49,
+        4.107121,
+        5.369,
         6.45
       ],
       "videoPath": "videos/simon/phase1/powerful-combo.mp4"
@@ -25,11 +25,11 @@
       "id": "punch-combo",
       "name": "Punch Combo",
       "timings": [
-        2.566,
-        4.233,
-        5.451,
-        7.586,
-        9.252
+        2.376,
+        3.97,
+        5.183882,
+        7.371,
+        9.115804
       ],
       "videoPath": "videos/simon/phase1/punch-combo.mp4"
     },
@@ -37,12 +37,12 @@
       "id": "long-combo",
       "name": "Long Combo",
       "timings": [
-        3.52,
-        4.669,
-        5.66,
-        6.519,
-        7.509,
-        8.629
+        3.372557,
+        4.576385,
+        5.652146,
+        6.523,
+        7.317013,
+        8.495228
       ],
       "videoPath": "videos/simon/phase1/long-combo.mp4"
     }
@@ -71,7 +71,7 @@
       "timings": [
         3.338,
         3.977,
-        4.860,
+        4.86,
         5.991,
         7.277,
         8.584,

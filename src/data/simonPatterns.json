@@ -69,13 +69,13 @@
       "id": "sword-of-lumiere",
       "name": "Sword of Lumiere",
       "timings": [
-        1.01,
-        2.02,
-        3.03,
-        4.04,
-        6.06,
-        7,
-        8
+        3.36,
+        3.9,
+        4.896,
+        6.031,
+        7.34,
+        8.649,
+        10.012
       ],
       "videoPath": "videos/simon/phase2/sword-of-lumiere.mp4"
     },
@@ -116,12 +116,12 @@
       "id": "powerful-combo-p2",
       "name": "Powerful Combo (phase 2)",
       "timings": [
-        1.01,
-        2.52,
-        4.03,
-        5.54,
-        5.55,
-        6.66
+        3.009,
+        3.453,
+        4.259,
+        4.748,
+        5.335,
+        5.866
       ],
       "videoPath": "videos/simon/phase2/powerful-combo.mp4"
     }

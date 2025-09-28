@@ -24,6 +24,7 @@ export interface TimingAdjustmentInterfaceProps {
   onSave: (newTimings: number[]) => void;
   onDiscard: () => void;
   onRetry: () => void;
+  mode?: 'calibration' | 'quickEdit'; // Optional prop to determine the interface mode (defaults to 'calibration')
 }
 
 export interface QuickEditInterfaceProps {

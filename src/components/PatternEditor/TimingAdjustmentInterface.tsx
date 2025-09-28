@@ -6,8 +6,10 @@ export function TimingAdjustmentInterface({
   capturedTimings,
   onSave,
   onDiscard,
-  onRetry
+  onRetry,
+  mode = 'calibration'
 }: TimingAdjustmentInterfaceProps) {
+  const isQuickEditMode = mode === 'quickEdit';
   const [adjustedTimings, setAdjustedTimings] = useState<number[]>([]);
   const [baseTimings, setBaseTimings] = useState<number[]>([]);  // Base timings for offset calculation
   const [globalOffset, setGlobalOffset] = useState<number>(0);
@@ -224,19 +226,21 @@ export function TimingAdjustmentInterface({
           >
             Global Offset
           </button>
-          <button
-            onClick={() => {
-              setAdjustmentMode('replace');
-              replaceWithCaptured();
-            }}
-            className={`px-4 py-2 rounded font-medium transition-colors ${
-              adjustmentMode === 'replace'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-            }`}
-          >
-            Replace with Captured
-          </button>
+          {!isQuickEditMode && (
+            <button
+              onClick={() => {
+                setAdjustmentMode('replace');
+                replaceWithCaptured();
+              }}
+              className={`px-4 py-2 rounded font-medium transition-colors ${
+                adjustmentMode === 'replace'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+              }`}
+            >
+              Replace with Captured
+            </button>
+          )}
           <button
             onClick={() => setAdjustmentMode('manual')}
             className={`px-4 py-2 rounded font-medium transition-colors ${
@@ -342,7 +346,9 @@ export function TimingAdjustmentInterface({
             <thead>
               <tr className="bg-gray-100">
                 <th className="border border-gray-300 px-3 py-2 text-left">Event</th>
-                <th className="border border-gray-300 px-3 py-2 text-center">Original</th>
+                {!isQuickEditMode && (
+                  <th className="border border-gray-300 px-3 py-2 text-center">Original</th>
+                )}
                 <th className="border border-gray-300 px-3 py-2 text-center">Captured</th>
                 <th className="border border-gray-300 px-3 py-2 text-center">New Value</th>
                 <th className="border border-gray-300 px-3 py-2 text-center">Difference</th>
@@ -359,9 +365,11 @@ export function TimingAdjustmentInterface({
                     <td className="border border-gray-300 px-3 py-2 font-medium">
                       Event {index + 1}
                     </td>
-                    <td className="border border-gray-300 px-3 py-2 text-center font-mono">
-                      {originalTiming.toFixed(3)}s
-                    </td>
+                    {!isQuickEditMode && (
+                      <td className="border border-gray-300 px-3 py-2 text-center font-mono">
+                        {originalTiming.toFixed(3)}s
+                      </td>
+                    )}
                     <td className="border border-gray-300 px-3 py-2 text-center font-mono">
                       {capturedTiming ? capturedTiming.toFixed(3) + 's' : '-'}
                     </td>

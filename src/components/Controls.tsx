@@ -98,6 +98,42 @@ export function Controls({
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-gray-700">
+            Audio Hints
+          </span>
+          <div className="relative">
+            <input
+              type="checkbox"
+              checked={options.audioHintEnabled}
+              onChange={(e) =>
+                onOptionsChange({
+                  ...options,
+                  audioHintEnabled: e.target.checked,
+                })
+              }
+              className="sr-only"
+              id="audio-hint-toggle"
+            />
+            <label 
+              htmlFor="audio-hint-toggle"
+              className={`block w-11 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200 ease-in-out ${
+                options.audioHintEnabled 
+                  ? 'bg-green-500' 
+                  : 'bg-gray-300'
+              }`}
+            >
+              <div 
+                className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ease-in-out ${
+                  options.audioHintEnabled 
+                    ? 'translate-x-5' 
+                    : 'translate-x-0'
+                }`}
+              />
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   );

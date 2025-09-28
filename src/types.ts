@@ -13,6 +13,7 @@ export type Press = {
 export type PlaybackOptions = {
   toleranceMs: number;
   preRollSeconds: number;
+  audioHintEnabled: boolean;
 }
 
 export type PlaybackState = {

@@ -14,6 +14,7 @@ export function SimonSimulator() {
   const [options, setOptions] = useState<PlaybackOptions>({
     toleranceMs: 100,
     preRollSeconds: 1.0,
+    audioHintEnabled: true,
   });
 
   const videoRef = useRef<HTMLVideoElement>(null);

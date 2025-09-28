@@ -63,7 +63,9 @@ export function usePlayback(events: Event[], options: PlaybackOptions) {
         adjustedTime >= event.time && 
         !playedEventsRef.current.has(event.id)
       ) {
-        playClick();
+        if (options.audioHintEnabled) {
+          playClick();
+        }
         playedEventsRef.current.add(event.id);
       }
     });

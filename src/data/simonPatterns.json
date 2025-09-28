@@ -69,13 +69,13 @@
       "id": "sword-of-lumiere",
       "name": "Sword of Lumiere",
       "timings": [
-        3.36,
-        3.9,
-        4.896,
-        6.031,
-        7.34,
-        8.649,
-        10.012
+        3.338,
+        3.977,
+        4.860,
+        5.991,
+        7.277,
+        8.584,
+        10.053
       ],
       "videoPath": "videos/simon/phase2/sword-of-lumiere.mp4"
     },

@@ -53,7 +53,7 @@ export function usePlayback(events: Event[], options: PlaybackOptions) {
     if (!state.isPlaying) return;
 
     const elapsed = (performance.now() - startTimeRef.current) / 1000;
-    const adjustedTime = (elapsed - options.preRollSeconds) * options.speed;
+    const adjustedTime = elapsed - options.preRollSeconds;
     
     setState(prev => ({ ...prev, now: adjustedTime }));
 

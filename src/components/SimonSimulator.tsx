@@ -12,7 +12,6 @@ export function SimonSimulator() {
   const [inputError, setInputError] = useState<string | null>(null);
   const [currentVideoPath, setCurrentVideoPath] = useState<string | null>(null);
   const [options, setOptions] = useState<PlaybackOptions>({
-    speed: 1.0,
     toleranceMs: 100,
     preRollSeconds: 1.0,
   });
@@ -77,7 +76,7 @@ export function SimonSimulator() {
 
     if (isPlaying && now >= 0) {
       // Timeline has started (after pre-roll delay)
-      const videoTime = now / options.speed;
+      const videoTime = now;
       
       // Only sync if there's a significant difference (avoid constant adjustments)
       const timeDiff = Math.abs(video.currentTime - videoTime);
@@ -87,7 +86,7 @@ export function SimonSimulator() {
       
       // Start video playback
       if (video.paused) {
-        video.playbackRate = options.speed;
+        video.playbackRate = 1.0;
         video.play().catch(console.error);
       }
     } else if (isPlaying && now < 0) {
@@ -102,7 +101,7 @@ export function SimonSimulator() {
         video.pause();
       }
     }
-  }, [isPlaying, now, currentVideoPath, options.speed]);
+  }, [isPlaying, now, currentVideoPath]);
 
   // Reset video when playback resets
   useEffect(() => {
@@ -210,7 +209,7 @@ export function SimonSimulator() {
         <h3 className="font-semibold text-blue-900 mb-2">How to use:</h3>
         <ol className="text-blue-800 text-sm space-y-1 list-decimal list-inside">
           <li>Select simon phase (Phase 1 or Phase 2) and choose a pattern, or manually enter timings</li>
-          <li>Adjust playback speed, tolerance window, and pre-roll delay as needed</li>
+          <li>Adjust tolerance window and pre-roll delay as needed</li>
           <li>Click Play and wait for the pre-roll countdown</li>
           <li>Press SPACEBAR when you hear each click sound</li>
           <li>View your timing accuracy in real-time and export results as CSV</li>

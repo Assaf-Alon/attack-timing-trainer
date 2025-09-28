@@ -11,7 +11,6 @@ export type Press = {
 }
 
 export type PlaybackOptions = {
-  speed: number;
   toleranceMs: number;
   preRollSeconds: number;
 }

@@ -52,26 +52,6 @@ export function Controls({
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Playback Speed: {options.speed.toFixed(1)}x
-          </label>
-          <input
-            type="range"
-            min="0.5"
-            max="2.0"
-            step="0.1"
-            value={options.speed}
-            onChange={(e) =>
-              onOptionsChange({
-                ...options,
-                speed: parseFloat(e.target.value),
-              })
-            }
-            className="w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
             Tolerance Window (ms)
           </label>
           <input

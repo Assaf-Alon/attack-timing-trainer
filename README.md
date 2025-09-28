@@ -9,7 +9,6 @@ A React + TypeScript web application for practicing precise keypress timings bas
 - **Precise Timing**: Uses Web Audio API for low-latency click sounds and `performance.now()` for accurate timing
 - **Real-time Feedback**: Visual timeline showing your keypresses vs expected events
 - **Customizable Settings**: 
-  - Playback speed (0.5x - 2.0x)
   - Tolerance window (configurable in ms)
   - Pre-roll delay
 - **Performance Analytics**: 
@@ -49,7 +48,6 @@ A React + TypeScript web application for practicing precise keypress timings bas
    - Comments starting with `#` are ignored
 
 2. **Configure Settings**: 
-   - Adjust playback speed if needed
    - Set tolerance window (how precise you need to be)
    - Configure pre-roll delay (countdown before events start)
 

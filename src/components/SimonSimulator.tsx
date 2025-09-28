@@ -190,6 +190,7 @@ export function SimonSimulator() {
           isPlaying={isPlaying}
           options={options}
           hasError={inputError !== null}
+          hasEvents={events.length > 0}
           onPlay={handlePlay}
           onStop={stop}
           onReset={handleReset}

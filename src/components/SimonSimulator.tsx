@@ -133,17 +133,6 @@ export function SimonSimulator() {
           onVideoChange={setCurrentVideoPath}
         />
         
-        {/* Controls */}
-        <Controls
-          isPlaying={isPlaying}
-          options={options}
-          hasError={inputError !== null}
-          onPlay={handlePlay}
-          onStop={stop}
-          onReset={handleReset}
-          onOptionsChange={setOptions}
-        />
-        
         {/* Video Display */}
         {currentVideoPath && (
           <div className="bg-white p-6 rounded-lg shadow-md">
@@ -195,6 +184,17 @@ export function SimonSimulator() {
             duration={duration}
           />
         )}
+        
+        {/* Controls */}
+        <Controls
+          isPlaying={isPlaying}
+          options={options}
+          hasError={inputError !== null}
+          onPlay={handlePlay}
+          onStop={stop}
+          onReset={handleReset}
+          onOptionsChange={setOptions}
+        />
         
         {/* Feedback */}
         <Feedback

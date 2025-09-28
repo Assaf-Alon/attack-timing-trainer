@@ -52,16 +52,16 @@
       "id": "lightspeed-combo",
       "name": "Lightspeed Combo",
       "timings": [
-        3.187,
-        3.975,
-        4.963,
-        5.859,
-        6.787,
-        7.491,
-        8.265,
-        9.449,
-        10.175,
-        12.547
+        3.037,
+        3.825,
+        4.813,
+        5.709,
+        6.637,
+        7.35,
+        8.115,
+        9.299,
+        10.025,
+        12.397
       ],
       "videoPath": "/videos/simon/phase2/lightspeed-combo.mp4"
     },
@@ -73,7 +73,9 @@
         2.02,
         3.03,
         4.04,
-        6.06
+        6.06,
+        7,
+        8
       ],
       "videoPath": "/videos/simon/phase2/sword-of-lumiere.mp4"
     },
@@ -81,12 +83,13 @@
       "id": "short-combo-p2",
       "name": "Short Combo (phase 2)",
       "timings": [
-        1.01,
-        1.81,
-        2.22,
-        3.33,
-        4.44,
-        5.55
+        1.55,
+        2.058,
+        2.946,
+        3.497,
+        4.452,
+        6.224,
+        6.687
       ],
       "videoPath": "/videos/simon/phase2/short-combo.mp4"
     },
@@ -94,18 +97,18 @@
       "id": "long-combo-p2",
       "name": "Long Combo (phase 2)",
       "timings": [
-        1.01,
-        1.81,
-        2.61,
-        3.41,
-        4.21,
-        5.0,
-        6.0,
-        7.0,
-        8.0,
-        9.0,
-        10.0,
-        11.0
+        3.714,
+        4.261,
+        5.083,
+        5.486,
+        6.12,
+        6.653,
+        7.168,
+        7.629,
+        8.022,
+        8.477,
+        9.251,
+        9.729
       ],
       "videoPath": "/videos/simon/phase2/long-combo.mp4"
     },

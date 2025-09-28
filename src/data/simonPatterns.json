@@ -52,16 +52,16 @@
       "id": "lightspeed-combo",
       "name": "Lightspeed Combo",
       "timings": [
-        3.037,
-        3.825,
-        4.813,
-        5.709,
-        6.637,
-        7.35,
-        8.115,
-        9.299,
-        10.025,
-        12.397
+        2.901,
+        3.660748,
+        4.628742,
+        5.563357,
+        6.464593,
+        7.241,
+        7.966652,
+        9.212,
+        9.869261,
+        12.215
       ],
       "videoPath": "videos/simon/phase2/lightspeed-combo.mp4"
     },
@@ -70,12 +70,12 @@
       "name": "Sword of Lumiere",
       "timings": [
         3.338,
-        3.977,
+        3.908564,
         4.86,
         5.991,
         7.277,
         8.584,
-        10.053
+        9.923
       ],
       "videoPath": "videos/simon/phase2/sword-of-lumiere.mp4"
     },
@@ -83,13 +83,13 @@
       "id": "short-combo-p2",
       "name": "Short Combo (phase 2)",
       "timings": [
-        1.55,
-        2.058,
-        2.946,
-        3.497,
-        4.452,
-        6.224,
-        6.687
+        1.410429,
+        1.896037,
+        2.877664,
+        3.373822,
+        4.682821,
+        6.061749,
+        6.562435
       ],
       "videoPath": "videos/simon/phase2/short-combo.mp4"
     },
@@ -98,17 +98,17 @@
       "name": "Long Combo (phase 2)",
       "timings": [
         3.714,
-        4.261,
-        5.083,
-        5.486,
-        6.12,
-        6.653,
-        7.168,
-        7.629,
+        4.219,
+        4.913113,
+        5.4,
+        6.048956,
+        6.616877,
+        7.103667,
+        7.617501,
         8.022,
-        8.477,
-        9.251,
-        9.729
+        8.449,
+        9.21309,
+        9.661
       ],
       "videoPath": "videos/simon/phase2/long-combo.mp4"
     },
@@ -116,11 +116,11 @@
       "id": "powerful-combo-p2",
       "name": "Powerful Combo (phase 2)",
       "timings": [
-        3.009,
-        3.453,
-        4.259,
-        4.748,
-        5.335,
+        2.96547,
+        3.448,
+        4.251,
+        4.693,
+        5.359552,
         5.866
       ],
       "videoPath": "videos/simon/phase2/powerful-combo.mp4"

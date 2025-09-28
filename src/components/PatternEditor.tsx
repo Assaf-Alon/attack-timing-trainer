@@ -736,8 +736,8 @@ function TimingAdjustmentInterface({
   const [adjustedTimings, setAdjustedTimings] = useState<number[]>([]);
   const [baseTimings, setBaseTimings] = useState<number[]>([]);  // Base timings for offset calculation
   const [globalOffset, setGlobalOffset] = useState<number>(0);
-  const [adjustmentMode, setAdjustmentMode] = useState<'offset' | 'replace' | 'manual'>('offset');
-  const [offsetSource, setOffsetSource] = useState<'original' | 'captured'>('original'); // New: what to apply offset to
+  const [adjustmentMode, setAdjustmentMode] = useState<'offset' | 'replace' | 'manual'>('manual');
+  const [offsetSource, setOffsetSource] = useState<'original' | 'captured'>('captured'); // New: what to apply offset to
   const [currentVideoTime, setCurrentVideoTime] = useState<number>(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -828,49 +828,6 @@ function TimingAdjustmentInterface({
         <p className="text-gray-600">
           Compare your captured timings with the original and choose how to adjust them.
         </p>
-      </div>
-
-      {/* Adjustment Mode Selection */}
-      <div>
-        <h4 className="font-medium mb-3">Adjustment Method:</h4>
-        <div className="flex gap-3">
-          <button
-            onClick={() => {
-              setAdjustmentMode('offset');
-              applyGlobalOffset(globalOffset);
-            }}
-            className={`px-4 py-2 rounded font-medium transition-colors ${
-              adjustmentMode === 'offset'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-            }`}
-          >
-            Global Offset
-          </button>
-          <button
-            onClick={() => {
-              setAdjustmentMode('replace');
-              replaceWithCaptured();
-            }}
-            className={`px-4 py-2 rounded font-medium transition-colors ${
-              adjustmentMode === 'replace'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-            }`}
-          >
-            Replace with Captured
-          </button>
-          <button
-            onClick={() => setAdjustmentMode('manual')}
-            className={`px-4 py-2 rounded font-medium transition-colors ${
-              adjustmentMode === 'manual'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-            }`}
-          >
-            Manual Fine-tuning
-          </button>
-        </div>
       </div>
 
       {/* Video Display with Timestamp */}
@@ -972,6 +929,49 @@ function TimingAdjustmentInterface({
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Adjustment Mode Selection */}
+      <div>
+        <h4 className="font-medium mb-3">Adjustment Method:</h4>
+        <div className="flex gap-3">
+          <button
+            onClick={() => {
+              setAdjustmentMode('offset');
+              applyGlobalOffset(globalOffset);
+            }}
+            className={`px-4 py-2 rounded font-medium transition-colors ${
+              adjustmentMode === 'offset'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+            }`}
+          >
+            Global Offset
+          </button>
+          <button
+            onClick={() => {
+              setAdjustmentMode('replace');
+              replaceWithCaptured();
+            }}
+            className={`px-4 py-2 rounded font-medium transition-colors ${
+              adjustmentMode === 'replace'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+            }`}
+          >
+            Replace with Captured
+          </button>
+          <button
+            onClick={() => setAdjustmentMode('manual')}
+            className={`px-4 py-2 rounded font-medium transition-colors ${
+              adjustmentMode === 'manual'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+            }`}
+          >
+            Manual Fine-tuning
+          </button>
         </div>
       </div>
 

@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { loadSimonPatterns, updatePattern, resetPatternsToDefault, type BossPhase, type AttackPattern, type SimonPatterns } from '../utils/patternLoader';
+import { GlobalOffsetControl } from './GlobalOffsetControl';
+import { TimingComparisonTable } from './TimingComparisonTable';
 
-type EditMode = 'view' | 'calibrate' | 'adjust';
+type EditMode = 'view' | 'calibrate' | 'quickEdit' | 'adjust';
 
 interface PatternEditorState {
   patterns: SimonPatterns | null;
@@ -172,7 +174,7 @@ export function PatternEditor() {
               onClick={handleExportForJSON}
               className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-colors text-sm"
             >
-              � Export as JSON
+              📤 Export as JSON
             </button>
             <button
               onClick={handleResetToDefaults}
@@ -321,12 +323,20 @@ export function PatternEditor() {
             </div>
             
             {state.editMode === 'view' && (
-              <button
-                onClick={startCalibration}
-                className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded font-medium transition-colors"
-              >
-                🎯 Calibrate Timing
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setState(prev => ({ ...prev, editMode: 'quickEdit' }))}
+                  className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-colors"
+                >
+                  ⚙️ Quick Edit
+                </button>
+                <button
+                  onClick={startCalibration}
+                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded font-medium transition-colors"
+                >
+                  🎯 Calibrate Timing
+                </button>
+              </div>
             )}
           </div>
 
@@ -339,6 +349,48 @@ export function PatternEditor() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Quick Edit Mode */}
+      {state.editMode === 'quickEdit' && state.selectedPattern && (
+        <QuickEditInterface
+          pattern={state.selectedPattern}
+          onSave={(newTimings) => {
+            try {
+              const updatedPatterns = updatePattern(
+                state.selectedPhase,
+                state.selectedPattern!.id,
+                newTimings
+              );
+              
+              const updatedPattern = updatedPatterns[state.selectedPhase]
+                .find(p => p.id === state.selectedPattern!.id)!;
+              
+              setState(prev => ({
+                ...prev,
+                patterns: updatedPatterns,
+                selectedPattern: updatedPattern,
+                editMode: 'view',
+                hasUnsavedChanges: true
+              }));
+
+              setTimeout(() => {
+                setState(prev => ({ ...prev, hasUnsavedChanges: false }));
+              }, 3000);
+            } catch (error) {
+              setState(prev => ({
+                ...prev,
+                error: error instanceof Error ? error.message : 'Failed to save pattern'
+              }));
+            }
+          }}
+          onCancel={() => {
+            setState(prev => ({
+              ...prev,
+              editMode: 'view'
+            }));
+          }}
+        />
       )}
 
       {/* Calibration Mode */}
@@ -682,27 +734,53 @@ function TimingAdjustmentInterface({
   onRetry: () => void;
 }) {
   const [adjustedTimings, setAdjustedTimings] = useState<number[]>([]);
+  const [baseTimings, setBaseTimings] = useState<number[]>([]);  // Base timings for offset calculation
   const [globalOffset, setGlobalOffset] = useState<number>(0);
   const [adjustmentMode, setAdjustmentMode] = useState<'offset' | 'replace' | 'manual'>('offset');
+  const [offsetSource, setOffsetSource] = useState<'original' | 'captured'>('original'); // New: what to apply offset to
   const [currentVideoTime, setCurrentVideoTime] = useState<number>(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Calculate suggested offset (difference between first captured and first original)
+  // Initialize with captured timings as suggested values
   useEffect(() => {
     if (capturedTimings.length > 0 && pattern.timings.length > 0) {
-      const suggestedOffset = capturedTimings[0] - pattern.timings[0];
-      setGlobalOffset(suggestedOffset);
+      // Start with captured timings as the base
+      const paddedCaptured = [...capturedTimings];
+      while (paddedCaptured.length < pattern.timings.length) {
+        const lastCaptured = paddedCaptured[paddedCaptured.length - 1] || 0;
+        const originalGap = pattern.timings[paddedCaptured.length] - pattern.timings[paddedCaptured.length - 1];
+        paddedCaptured.push(lastCaptured + originalGap);
+      }
+      const finalCaptured = paddedCaptured.slice(0, pattern.timings.length);
       
-      // Apply offset to original timings as default
-      const offsetTimings = pattern.timings.map(t => t + suggestedOffset);
-      setAdjustedTimings(offsetTimings);
+      setAdjustedTimings(finalCaptured);
+      setBaseTimings(finalCaptured);
+      setGlobalOffset(0); // Start with no offset since we're using captured as base
     }
   }, [capturedTimings, pattern.timings]);
 
   const applyGlobalOffset = (offset: number) => {
-    const offsetTimings = pattern.timings.map(t => Math.max(0, t + offset));
+    const offsetTimings = baseTimings.map(t => Math.max(0, t + offset));
     setAdjustedTimings(offsetTimings);
     setGlobalOffset(offset);
+  };
+  
+  const changeOffsetSource = (source: 'original' | 'captured') => {
+    setOffsetSource(source);
+    const newBase = source === 'original' ? pattern.timings : capturedTimings.length > 0 ? 
+      (() => {
+        const paddedCaptured = [...capturedTimings];
+        while (paddedCaptured.length < pattern.timings.length) {
+          const lastCaptured = paddedCaptured[paddedCaptured.length - 1] || 0;
+          const originalGap = pattern.timings[paddedCaptured.length] - pattern.timings[paddedCaptured.length - 1];
+          paddedCaptured.push(lastCaptured + originalGap);
+        }
+        return paddedCaptured.slice(0, pattern.timings.length);
+      })() : pattern.timings;
+    
+    setBaseTimings(newBase);
+    setGlobalOffset(0); // Reset offset when switching source
+    setAdjustedTimings(newBase);
   };
 
   const replaceWithCaptured = () => {
@@ -900,6 +978,40 @@ function TimingAdjustmentInterface({
       {/* Global Offset Control */}
       {adjustmentMode === 'offset' && (
         <div className="p-4 bg-blue-50 rounded-lg">
+          <div className="mb-4">
+            <label className="block font-medium text-blue-900 mb-2">
+              Base timings to adjust:
+            </label>
+            <div className="flex gap-3 mb-2">
+              <button
+                onClick={() => changeOffsetSource('original')}
+                className={`px-3 py-1 rounded font-medium text-sm transition-colors ${
+                  offsetSource === 'original'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-blue-600 border border-blue-300 hover:bg-blue-50'
+                }`}
+              >
+                📋 Original Pattern
+              </button>
+              <button
+                onClick={() => changeOffsetSource('captured')}
+                className={`px-3 py-1 rounded font-medium text-sm transition-colors ${
+                  offsetSource === 'captured'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-blue-600 border border-blue-300 hover:bg-blue-50'
+                }`}
+              >
+                🎯 Your Recording
+              </button>
+            </div>
+            <p className="text-xs text-blue-600 mb-3">
+              {offsetSource === 'original' 
+                ? 'Start with the original pattern and adjust it with an offset'
+                : 'Start with your recorded timings and adjust them with an offset'
+              }
+            </p>
+          </div>
+          
           <label className="block font-medium text-blue-900 mb-2">
             Global Offset (seconds):
           </label>
@@ -921,10 +1033,29 @@ function TimingAdjustmentInterface({
               className="w-24 px-2 py-1 border border-gray-300 rounded text-center font-mono"
             />
           </div>
-          <p className="text-sm text-blue-700 mt-2">
-            Suggested offset: {(capturedTimings[0] - pattern.timings[0]).toFixed(3)}s
-            (based on first event difference)
-          </p>
+          <div className="flex justify-between items-center text-sm text-blue-700 mt-2">
+            <span>
+              {offsetSource === 'original' 
+                ? `Applying ${globalOffset >= 0 ? '+' : ''}${globalOffset.toFixed(3)}s to original pattern timings`
+                : `Applying ${globalOffset >= 0 ? '+' : ''}${globalOffset.toFixed(3)}s to your recorded timings`
+              }
+            </span>
+            {capturedTimings.length > 0 && (
+              <button
+                onClick={() => {
+                  const suggestedOffset = offsetSource === 'original' 
+                    ? capturedTimings[0] - pattern.timings[0]  // To make original match captured
+                    : pattern.timings[0] - capturedTimings[0]; // To make captured match original
+                  applyGlobalOffset(suggestedOffset);
+                }}
+                className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded font-medium transition-colors"
+              >
+                Apply Suggested ({(offsetSource === 'original' 
+                  ? capturedTimings[0] - pattern.timings[0] 
+                  : pattern.timings[0] - capturedTimings[0]).toFixed(3)}s)
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -1050,6 +1181,124 @@ function TimingAdjustmentInterface({
           className="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           💾 Save New Timings
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Quick Edit Interface Component
+function QuickEditInterface({ 
+  pattern, 
+  onSave, 
+  onCancel 
+}: { 
+  pattern: AttackPattern;
+  onSave: (newTimings: number[]) => void;
+  onCancel: () => void;
+}) {
+  const [editedTimings, setEditedTimings] = useState<number[]>(pattern.timings);
+
+  const handleGlobalOffset = (newTimings: number[]) => {
+    setEditedTimings(newTimings);
+  };
+
+  const handleIndividualTimingChange = (index: number, value: number) => {
+    const newTimings = [...editedTimings];
+    newTimings[index] = Math.max(0, value);
+    
+    // Ensure timings remain in ascending order
+    for (let i = 0; i < newTimings.length - 1; i++) {
+      if (newTimings[i] >= newTimings[i + 1]) {
+        newTimings[i + 1] = newTimings[i] + 0.01;
+      }
+    }
+    
+    setEditedTimings(newTimings);
+  };
+
+  const handleSave = () => {
+    onSave(editedTimings);
+  };
+
+  const hasChanges = editedTimings.some((timing, index) => 
+    Math.abs(timing - pattern.timings[index]) > 0.001
+  );
+
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-2">⚙️ Quick Edit - {pattern.name}</h3>
+        <p className="text-gray-600">
+          Apply global offset or manually adjust individual timings without calibration.
+        </p>
+      </div>
+
+      {/* Global Offset Control */}
+      <GlobalOffsetControl
+        timings={pattern.timings}
+        onTimingsChange={handleGlobalOffset}
+        label="Global Offset"
+        className=""
+      />
+
+      {/* Timing Comparison Table */}
+      <div>
+        <h4 className="font-medium mb-3">Timing Details:</h4>
+        <TimingComparisonTable
+          originalTimings={pattern.timings}
+          currentTimings={editedTimings}
+          onTimingChange={handleIndividualTimingChange}
+          editable={true}
+        />
+      </div>
+
+      {/* Summary Stats */}
+      {hasChanges && (
+        <div className="p-4 bg-gray-50 rounded-lg">
+          <h4 className="font-medium mb-2">Summary:</h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+            <div>
+              <span className="text-gray-600">Average Change:</span>
+              <div className="font-mono">
+                {(editedTimings.reduce((sum, timing, index) => 
+                  sum + Math.abs(timing - pattern.timings[index]), 0) / editedTimings.length
+                ).toFixed(3)}s
+              </div>
+            </div>
+            <div>
+              <span className="text-gray-600">Max Change:</span>
+              <div className="font-mono">
+                {Math.max(...editedTimings.map((timing, index) => 
+                  Math.abs(timing - pattern.timings[index])
+                )).toFixed(3)}s
+              </div>
+            </div>
+            <div>
+              <span className="text-gray-600">Total Duration:</span>
+              <div className="font-mono">
+                {editedTimings[editedTimings.length - 1].toFixed(3)}s
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Action Buttons */}
+      <div className="flex justify-between items-center">
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded font-medium transition-colors"
+        >
+          Cancel
+        </button>
+        
+        <button
+          onClick={handleSave}
+          disabled={!hasChanges}
+          className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          💾 Save Changes
         </button>
       </div>
     </div>
